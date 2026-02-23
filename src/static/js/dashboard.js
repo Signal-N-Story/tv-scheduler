@@ -161,15 +161,136 @@ $('#previewModal').addEventListener('click', (e) => {
     }
 });
 
+// ── File Upload ─────────────────────────────────────────────────
+const UPLOAD_MAX_SIZE = 5 * 1024 * 1024; // 5 MB
+const UPLOAD_ALLOWED_TYPES = ['.html', '.htm', '.png', '.jpg', '.jpeg'];
+
+function getFileExtension(filename) {
+    const dot = filename.lastIndexOf('.');
+    return dot !== -1 ? filename.substring(dot).toLowerCase() : '';
+}
+
+function showUploadError(text) {
+    const el = $('#uploadError');
+    el.textContent = text;
+    el.classList.remove('hidden');
+    setTimeout(() => el.classList.add('hidden'), 6000);
+}
+
+
+function hideUploadError() {
+    $('#uploadError').classList.add('hidden');
+}
+
+function setUploadSuccess(filename) {
+    $('#uploadPrompt').classList.add('hidden');
+    $('#uploadSuccess').classList.remove('hidden');
+    $('#uploadFileName').textContent = filename;
+    $('#uploadZone').classList.add('upload-done');
+}
+
+function clearUpload() {
+    $('#uploadPrompt').classList.remove('hidden');
+    $('#uploadSuccess').classList.add('hidden');
+    $('#uploadFileName').textContent = '';
+    $('#uploadZone').classList.remove('upload-done');
+    $('#fileInput').value = '';
+    hideUploadError();
+}
+
+function processFile(file) {
+    hideUploadError();
+
+    const ext = getFileExtension(file.name);
+    if (!UPLOAD_ALLOWED_TYPES.includes(ext)) {
+        showUploadError(`Invalid file type "${ext}". Accepted: ${UPLOAD_ALLOWED_TYPES.join(', ')}`);
+        return;
+    }
+    if (file.size > UPLOAD_MAX_SIZE) {
+        showUploadError(`File too large (${(file.size / 1024 / 1024).toFixed(1)} MB). Maximum is 5 MB.`);
+        return;
+    }
+
+    const isImage = ['.png', '.jpg', '.jpeg'].includes(ext);
+
+    if (isImage) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const dataUrl = e.target.result;
+            const mimeExt = ext === '.jpg' ? 'jpeg' : ext.substring(1);
+            const base64Data = dataUrl.split(',')[1];
+            const cardHtml = `<!DOCTYPE html>
+<html><head>
+<meta charset="UTF-8">
+<style>
+  * { margin:0; padding:0; }
+  body { width:1920px; height:1080px; overflow:hidden; background:#000; }
+  img { width:100%; height:100%; object-fit:contain; }
+</style>
+</head><body>
+<img src="data:image/${mimeExt};base64,${base64Data}" alt="Workout Card">
+</body></html>`;
+            $('#htmlContent').value = cardHtml;
+            if (!$('#workoutTitle').value.trim()) {
+                const title = file.name.replace(/\.[^.]+$/, '').replace(/[_-]/g, ' ');
+                $('#workoutTitle').value = title;
+            }
+            setUploadSuccess(file.name);
+            $('#previewFrame').srcdoc = cardHtml;
+            $('#previewModal').classList.remove('hidden');
+        };
+        reader.onerror = function() { showUploadError('Failed to read image file.'); };
+        reader.readAsDataURL(file);
+    } else {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const htmlText = e.target.result;
+            $('#htmlContent').value = htmlText;
+            const titleMatch = htmlText.match(/<title[^>]*>([^<]+)<\/title>/i);
+            if (titleMatch && !$('#workoutTitle').value.trim()) {
+                $('#workoutTitle').value = titleMatch[1].trim();
+            }
+            setUploadSuccess(file.name);
+            $('#previewFrame').srcdoc = htmlText;
+            $('#previewModal').classList.remove('hidden');
+        };
+        reader.onerror = function() { showUploadError('Failed to read HTML file.'); };
+        reader.readAsText(file);
+    }
+}
+
+// Browse button
+$('#browseBtn').addEventListener('click', () => { $('#fileInput').click(); });
+
+// File input change
+$('#fileInput').addEventListener('change', (e) => {
+    if (e.target.files && e.target.files[0]) processFile(e.target.files[0]);
+});
+
+// Clear upload
+$('#clearUploadBtn').addEventListener('click', clearUpload);
+
+// Drag and drop
+$('#uploadZone').addEventListener('dragover', (e) => {
+    e.preventDefault(); e.stopPropagation();
+    $('#uploadZone').classList.add('drag-active');
+});
+$('#uploadZone').addEventListener('dragleave', (e) => {
+    e.preventDefault(); e.stopPropagation();
+    $('#uploadZone').classList.remove('drag-active');
+});
+$('#uploadZone').addEventListener('drop', (e) => {
+    e.preventDefault(); e.stopPropagation();
+    $('#uploadZone').classList.remove('drag-active');
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) processFile(e.dataTransfer.files[0]);
+});
+
+// Reset upload state when form is reset
+$('#scheduleForm').addEventListener('reset', () => { setTimeout(clearUpload, 0); });
 
 // ── Canva Import ────────────────────────────────────────────────
 function parseCanvaUrl(url) {
     if (!url) return null;
-    // Match patterns like:
-    //   https://www.canva.com/design/DAGxxxxx/view
-    //   https://www.canva.com/design/DAGxxxxx/edit
-    //   https://www.canva.com/design/DAGxxxxx/something?utm=...
-    //   https://canva.com/design/DAGxxxxx/view
     const match = url.match(/https?:\/\/(?:www\.)?canva\.com\/design\/([A-Za-z0-9_-]+)/);
     return match ? match[1] : null;
 }
@@ -224,18 +345,15 @@ $('#canvaImportBtn').addEventListener('click', () => {
 <iframe src="${embedUrl}" width="1920" height="1080" frameborder="0" allowfullscreen></iframe>
 </body></html>`;
 
-    // Populate the form fields
     $('#htmlContent').value = cardHtml;
     if (!$('#workoutTitle').value.trim()) {
         $('#workoutTitle').value = 'Canva Import';
     }
 
-    // Show a preview in the modal
     const frame = $('#previewFrame');
     frame.srcdoc = cardHtml;
     $('#previewModal').classList.remove('hidden');
 
-    // Scroll to the Card HTML textarea
     $('#htmlContent').scrollIntoView({ behavior: 'smooth', block: 'center' });
 
     showMsg($('#formMessage'), 'Canva design imported. Review the card and push to schedule.', 'success');
