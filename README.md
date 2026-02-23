@@ -4,7 +4,7 @@ Automated workout card scheduling and display system for ATC.
 
 ## Overview
 
-The TV Scheduler extends the ARIZE Plan2Card system to automate multi-day scheduling of workout cards to 3 gym TVs. Coaches upload once per week, cards auto-rotate at midnight, and a dashboard provides full visibility and emergency override capability.
+The TV Scheduler extends the ATC Plan2Card system to automate multi-day scheduling of workout cards to 3 gym TVs. Coaches upload once per week, cards auto-rotate at midnight, and a dashboard provides full visibility and emergency override capability.
 
 ## Architecture
 

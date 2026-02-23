@@ -99,8 +99,8 @@ def get_splash_html() -> str:
 </style>
 </head><body>
 <div class="logo">
-  <h1>ARIZE</h1>
-  <p>180 Fitness Club</p>
+  <h1>ATC</h1>
+  <p>ATC</p>
 </div>
 </body></html>"""
 

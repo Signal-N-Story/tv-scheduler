@@ -16,4 +16,5 @@ venv/
 .vscode/
 *.swp
 *.swo
-.DS_Store
+.DS_Store*.db-shm
+*.db-wal

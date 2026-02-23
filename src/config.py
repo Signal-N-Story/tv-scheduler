@@ -1,4 +1,4 @@
-"""ARIZE TV Scheduler — Configuration."""
+"""ATC TV Scheduler — Configuration."""
 
 from pathlib import Path
 from pydantic_settings import BaseSettings

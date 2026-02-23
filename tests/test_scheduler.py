@@ -1,4 +1,4 @@
-"""Tests for ARIZE TV Scheduler."""
+"""Tests for ATC TV Scheduler."""
 
 import pytest
 from datetime import date
@@ -77,8 +77,8 @@ def test_splash_html():
     from src.services.fallback import get_splash_html
 
     html = get_splash_html()
-    assert "ARIZE" in html
-    assert "180 Fitness" in html
+    assert "ATC" in html
+    assert "ATC" in html
 
 
 def test_settings_defaults():

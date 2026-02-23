@@ -1,4 +1,4 @@
-"""ARIZE TV Scheduler — FastAPI Application."""
+"""ATC TV Scheduler — FastAPI Application."""
 
 from contextlib import asynccontextmanager
 from datetime import datetime
@@ -94,8 +94,8 @@ async def _seed_sample_templates():
 
 
 app = FastAPI(
-    title="ARIZE TV Scheduler",
-    description="Automated workout card scheduling and display system for 180 Fitness Club",
+    title="ATC TV Scheduler",
+    description="Automated workout card scheduling and display system for ATC",
     version=APP_VERSION,
     lifespan=lifespan,
 )

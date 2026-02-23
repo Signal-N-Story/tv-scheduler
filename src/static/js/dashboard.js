@@ -1,5 +1,5 @@
 /**
- * ARIZE TV Scheduler — Dashboard JavaScript
+ * ATC TV Scheduler — Dashboard JavaScript
  */
 
 const API = '/api/schedule';
