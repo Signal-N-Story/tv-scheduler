@@ -1,6 +1,6 @@
-# ARIZE TV Scheduler
+# ATC TV Scheduler
 
-Automated workout card scheduling and display system for 180 Fitness Club.
+Automated workout card scheduling and display system for ATC.
 
 ## Overview
 
@@ -116,4 +116,4 @@ tv-scheduler/
 
 ## License
 
-Proprietary — 180 Fitness Club / Qualify.AI
+Proprietary — ATC
