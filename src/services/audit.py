@@ -25,22 +25,36 @@ async def log_action(
 
 async def get_audit_log(
     db: aiosqlite.Connection,
+    page: int = 1,
+    page_size: int = 50,
     action_filter: Optional[str] = None,
-    limit: int = 50,
-    offset: int = 0,
-) -> list[dict]:
-    """Retrieve audit log entries with optional filtering."""
-    where = ""
+    board_filter: Optional[str] = None,
+) -> tuple[list[dict], int]:
+    """Retrieve audit log entries with optional filtering and pagination."""
+    where_clauses: list[str] = []
     params: list = []
 
     if action_filter:
-        where = " WHERE action = ?"
+        where_clauses.append("action = ?")
         params.append(action_filter)
+    if board_filter:
+        where_clauses.append("board_type = ?")
+        params.append(board_filter)
 
+    where_sql = f" WHERE {' AND '.join(where_clauses)}" if where_clauses else ""
+
+    # Total count
     cursor = await db.execute(
-        f"""SELECT * FROM tv_audit_log{where}
+        f"SELECT COUNT(*) FROM tv_audit_log{where_sql}", params
+    )
+    total = (await cursor.fetchone())[0]
+
+    # Fetch page
+    offset = (page - 1) * page_size
+    cursor = await db.execute(
+        f"""SELECT * FROM tv_audit_log{where_sql}
             ORDER BY timestamp DESC LIMIT ? OFFSET ?""",
-        params + [limit, offset],
+        params + [page_size, offset],
     )
     rows = await cursor.fetchall()
-    return [dict(row) for row in rows]
+    return [dict(row) for row in rows], total

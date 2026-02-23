@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { width: 1920px; height: 1080px; background: #fff; font-family: 'Arial Black', Arial, sans-serif; color: #000; padding: 30px 60px; }
+  .title { text-align: center; font-size: 64px; font-weight: 900; letter-spacing: 2px; margin-bottom: 20px; }
+  .triangles-row { display: flex; justify-content: center; gap: 40px; margin-bottom: 20px; }
+  .tri-container { position: relative; width: 480px; height: 420px; }
+  .tri-shape {
+    width: 0; height: 0;
+    border-left: 240px solid transparent;
+    border-right: 240px solid transparent;
+    border-bottom: 400px solid transparent;
+    position: absolute; top: 0; left: 0;
+    filter: drop-shadow(0 0 1px #000);
+  }
+  .tri-border {
+    border-bottom-color: #888;
+  }
+  .tri-inner {
+    top: 20px; left: 20px;
+    border-left-width: 220px;
+    border-right-width: 220px;
+    border-bottom-width: 360px;
+    border-bottom-color: #fff;
+  }
+  .tri-content { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+  .tri-top-label { position: absolute; top: -5px; left: 50%; transform: translateX(-50%); font-size: 22px; font-weight: 900; white-space: nowrap; }
+  .tri-left-label { position: absolute; top: 50%; left: -10px; transform: rotate(-60deg) translateX(-50%); font-size: 18px; font-weight: 900; white-space: nowrap; }
+  .tri-right-label { position: absolute; top: 50%; right: -10px; transform: rotate(60deg) translateX(50%); font-size: 18px; font-weight: 900; white-space: nowrap; }
+  .tri-bl-label { position: absolute; bottom: 5px; left: 20px; font-size: 16px; font-weight: 900; }
+  .tri-br-label { position: absolute; bottom: 5px; right: 20px; font-size: 16px; font-weight: 900; }
+  .tri-bc-label { position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%); font-size: 16px; font-weight: 900; white-space: nowrap; }
+  .big-num { font-size: 64px; font-weight: 900; }
+  .label { font-size: 24px; font-weight: 900; }
+  .detail { font-size: 18px; font-weight: 700; line-height: 1.4; }
+  .side-text { position: absolute; font-size: 18px; font-weight: 900; }
+  .info-box { position: absolute; top: 20px; right: 10px; width: 240px; text-align: left; }
+  .info-box .info-title { font-size: 22px; font-weight: 900; margin-bottom: 4px; }
+  .info-box .info-detail { font-size: 18px; font-weight: 700; line-height: 1.4; }
+  .bottom-tri { display: flex; justify-content: center; margin-top: 10px; }
+</style>
+</head>
+<body>
+  <div class="title">BERMUDA TRIANGLE</div>
+
+  <div class="triangles-row">
+    <!-- Triangle 1: Upper Body -->
+    <div class="tri-container">
+      <div class="tri-top-label">PLANK ROWS</div>
+      <svg width="480" height="420" viewBox="0 0 480 420">
+        <polygon points="240,20 40,400 440,400" fill="none" stroke="#888" stroke-width="3"/>
+      </svg>
+      <div class="tri-content">
+        <div style="margin-top:80px;">
+          <div class="big-num">30,20,10</div>
+          <div class="label">UPPER BODY</div>
+        </div>
+      </div>
+      <div class="side-text" style="top:55%;left:30px;transform:rotate(-60deg);">CRAB TAPS</div>
+      <div class="side-text" style="top:55%;right:30px;transform:rotate(60deg);">CRAB TAPS</div>
+      <div class="side-text" style="bottom:30px;left:50px;font-size:14px;">BB<br>SHOULDER<br>PRESS</div>
+      <div class="side-text" style="bottom:10px;left:50%;transform:translateX(-50%);">CRAB TAPS</div>
+      <div class="side-text" style="bottom:30px;right:50px;font-size:14px;text-align:right;">WTD TRICEP<br>DIPS</div>
+    </div>
+
+    <!-- Info box + Triangle 2: Lower Body -->
+    <div style="position:relative;">
+      <div style="font-size:20px;font-weight:900;margin-bottom:4px;">KB SOMERSAULT SQUAT</div>
+      <div class="detail" style="margin-bottom:12px;">
+        "Britt's Booty Blaster"<br>
+        10 Mule Kicks,<br>
+        10 Hydrants,<br>
+        10 Side Kicks
+      </div>
+
+      <div class="tri-container" style="width:400px;height:360px;">
+        <svg width="400" height="360" viewBox="0 0 400 360">
+          <polygon points="200,20 30,340 370,340" fill="none" stroke="#333" stroke-width="3"/>
+        </svg>
+        <div class="tri-content">
+          <div style="margin-top:60px;">
+            <div class="label" style="font-size:28px;">10s x 3Rds</div>
+            <div class="label">LOWER BODY</div>
+          </div>
+        </div>
+        <div class="side-text" style="top:40%;right:-30px;transform:rotate(60deg);font-size:22px;">"BBB"</div>
+        <div class="side-text" style="bottom:5px;left:50%;transform:translateX(-50%);">"BBB"</div>
+        <div class="side-text" style="bottom:20px;left:30px;font-size:14px;">BULGARIAN<br>SPLIT SQUAT</div>
+        <div class="side-text" style="bottom:20px;right:30px;font-size:14px;text-align:right;">STIFF<br>LEG<br>DEADS</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Triangle: Chest & HIIT -->
+  <div class="bottom-tri">
+    <div class="tri-container" style="width:400px;height:320px;">
+      <div class="tri-top-label">7SNATCH L/R</div>
+      <svg width="400" height="320" viewBox="0 0 400 320">
+        <polygon points="200,20 30,300 370,300" fill="none" stroke="#888" stroke-width="3"/>
+      </svg>
+      <div class="tri-content">
+        <div style="margin-top:40px;">
+          <div class="big-num" style="font-size:56px;">7x7</div>
+          <div class="detail">ISLAND AFTER EACH ROUND</div>
+          <div class="label" style="background:#000;color:#fff;display:inline-block;padding:4px 12px;margin-top:4px;">CHEST &amp; HIIT</div>
+        </div>
+      </div>
+      <div class="side-text" style="bottom:20px;left:20px;">DB<br>Chest Press</div>
+      <div class="side-text" style="bottom:20px;right:20px;text-align:right;">BURPEE<br>BOX JUMP</div>
+    </div>
+  </div>
+</body>
+</html>

@@ -36,6 +36,18 @@ CREATE TABLE IF NOT EXISTS tv_audit_log (
 );
 
 CREATE INDEX IF NOT EXISTS idx_audit_timestamp ON tv_audit_log(timestamp);
+
+CREATE TABLE IF NOT EXISTS card_templates (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    name            TEXT NOT NULL UNIQUE,
+    board_type      TEXT NOT NULL CHECK(board_type IN ('mainboard', 'modboard')),
+    version         TEXT CHECK(version IN ('rx', 'scaled', 'mod')),
+    html_content    TEXT NOT NULL,
+    created_at      DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at      DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_template_board ON card_templates(board_type);
 """
 
 

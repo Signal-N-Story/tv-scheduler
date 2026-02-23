@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { width: 1920px; height: 1080px; background: #fff; font-family: 'Arial Black', Arial, sans-serif; color: #000; display: flex; flex-direction: column; padding: 30px 60px; }
+  .title { text-align: center; font-size: 72px; font-weight: 900; letter-spacing: 2px; }
+  .subtitle { text-align: center; font-family: 'Brush Script MT', 'Segoe Script', cursive; font-size: 48px; font-weight: 400; margin-top: -10px; margin-bottom: 10px; }
+  .warmup { text-align: center; font-size: 22px; font-weight: 900; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 16px; }
+  .divider { width: 100%; height: 5px; background: #000; margin: 8px 0; }
+  .grid { display: grid; grid-template-columns: 1fr 6px 1fr; flex: 1; }
+  .grid-divider-v { background: #000; }
+  .grid-divider-h { grid-column: 1 / -1; height: 5px; background: #000; }
+  .cell { padding: 20px 30px; display: flex; flex-direction: column; justify-content: center; }
+  .cell-title { font-size: 36px; font-weight: 900; text-align: center; margin-bottom: 4px; }
+  .cell-big { font-size: 80px; font-weight: 900; text-align: center; }
+  .cell-detail { font-size: 22px; font-weight: 700; text-align: center; line-height: 1.5; }
+  .cell-side { font-size: 20px; font-weight: 900; writing-mode: vertical-lr; text-orientation: mixed; text-align: center; letter-spacing: 2px; }
+  .arrow { font-size: 40px; text-align: center; }
+  .mid-col { display: flex; flex-direction: column; align-items: center; justify-content: center; background: #000; color: #fff; padding: 8px; }
+  .mid-label { writing-mode: vertical-lr; text-orientation: mixed; font-size: 18px; font-weight: 900; letter-spacing: 2px; }
+</style>
+</head>
+<body>
+  <div class="title">LEGS WEB</div>
+  <div class="subtitle">5 Round Challenge</div>
+  <div class="warmup">SINGLE LEG ELEVATED GLUTE BRIDGE 10L/10R</div>
+  <div class="divider"></div>
+
+  <div class="grid">
+    <!-- Top left -->
+    <div class="cell">
+      <div class="cell-title">KB<br>SOMERSAULT SQUAT</div>
+      <div class="cell-big">12</div>
+    </div>
+
+    <!-- Top center divider with text -->
+    <div class="mid-col">
+      <div class="mid-label">5 HIGH FIVES / 5 BBJ</div>
+    </div>
+
+    <!-- Top right -->
+    <div class="cell">
+      <div class="cell-title">BANDED MONSTER WALK</div>
+      <div class="arrow">&darr; &nbsp;&nbsp;&nbsp; &uarr;</div>
+    </div>
+
+    <!-- Horizontal divider -->
+    <div class="grid-divider-h"></div>
+
+    <!-- Middle left -->
+    <div class="cell" style="padding:10px 30px;">
+      <div class="cell-title" style="font-size:28px;">ISLAND LAP</div>
+    </div>
+
+    <div class="grid-divider-v"></div>
+
+    <!-- Middle right -->
+    <div class="cell" style="padding:10px 30px;">
+      <div class="cell-title" style="font-size:28px;">100 REVERSE SPIN LEVEL 16</div>
+    </div>
+
+    <!-- Horizontal divider -->
+    <div class="grid-divider-h"></div>
+
+    <!-- Bottom left -->
+    <div class="cell">
+      <div class="cell-title">HEAVY STIFF LEG DEADLIFT</div>
+      <div class="cell-big">10</div>
+    </div>
+
+    <!-- Bottom center divider with text -->
+    <div class="mid-col">
+      <div class="mid-label">UP &amp; OVERS 1, 20, 30, 40, 50</div>
+    </div>
+
+    <!-- Bottom right -->
+    <div class="cell">
+      <div class="cell-title">BARBELL BACK SQUAT</div>
+      <div class="cell-detail">
+        RD 1 50<br>
+        RD 2 40<br>
+        RD 3 30<br>
+        RD 4 20<br>
+        RD 5 10
+      </div>
+    </div>
+  </div>
+</body>
+</html>

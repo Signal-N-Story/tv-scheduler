@@ -2,13 +2,15 @@
 
 from datetime import date
 from typing import Optional
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 
 from src.models.database import get_db
 from src.models.schemas import (
     SchedulePushRequest,
     ScheduleEditRequest,
     OverrideRequest,
+    CloneDayRequest,
+    CloneWeekRequest,
     TVStatusResponse,
     AuditLogResponse,
 )
@@ -21,12 +23,13 @@ from src.services.scheduler import (
     apply_override,
 )
 from src.services.audit import get_audit_log
+from src.services.auth import require_api_key
 from src.services.swap import get_today, get_next_swap_time
 
 router = APIRouter(prefix="/api/schedule", tags=["schedule"])
 
 
-@router.post("")
+@router.post("", dependencies=[Depends(require_api_key)])
 async def push_schedule(request: SchedulePushRequest):
     """Push approved cards to the schedule (1-31 days)."""
     db = await get_db()
@@ -94,7 +97,7 @@ async def get_audit(
     """Audit log of all schedule changes."""
     db = await get_db()
     try:
-        entries, total = await get_audit_log(db, page, page_size, action, board)
+        entries, total = await get_audit_log(db, page, page_size, action_filter=action, board_filter=board)
         return {"entries": entries, "total": total, "page": page, "page_size": page_size}
     finally:
         await db.close()
@@ -110,7 +113,7 @@ async def get_schedule_by_date(target_date: date):
         await db.close()
 
 
-@router.put("/{target_date}/{board_type}")
+@router.put("/{target_date}/{board_type}", dependencies=[Depends(require_api_key)])
 async def edit_scheduled_card(
     target_date: date,
     board_type: str,
@@ -139,7 +142,7 @@ async def edit_scheduled_card(
         await db.close()
 
 
-@router.delete("/{target_date}")
+@router.delete("/{target_date}", dependencies=[Depends(require_api_key)])
 async def delete_scheduled_date(target_date: date):
     """Remove a scheduled day."""
     today = get_today()
@@ -156,7 +159,79 @@ async def delete_scheduled_date(target_date: date):
         await db.close()
 
 
-@router.post("/override")
+@router.post("/clone", dependencies=[Depends(require_api_key)])
+async def clone_day(request: CloneDayRequest):
+    """Clone cards from one date to another."""
+    from src.services.swap import get_today
+    today = get_today()
+    if request.target_date < today:
+        raise HTTPException(400, "Cannot clone to a past date")
+
+    db = await get_db()
+    try:
+        source = await get_schedule_for_date(db, request.source_date)
+        boards = [request.board_type] if request.board_type else ["mainboard", "modboard"]
+        cloned = []
+        for board in boards:
+            card = source.get(board)
+            if card:
+                row_id = await upsert_schedule_entry(
+                    db,
+                    schedule_date=request.target_date,
+                    board_type=board,
+                    workout_title=card["workout_title"],
+                    html_content=card["html_content"],
+                    version=card.get("version"),
+                    workout_date_label=card.get("workout_date_label"),
+                    pushed_by="clone",
+                )
+                cloned.append({"id": row_id, "board": board})
+
+        if not cloned:
+            raise HTTPException(404, f"No cards found on {request.source_date} to clone")
+        return {"status": "ok", "cloned": len(cloned), "entries": cloned}
+    finally:
+        await db.close()
+
+
+@router.post("/clone-week", dependencies=[Depends(require_api_key)])
+async def clone_week(request: CloneWeekRequest):
+    """Clone an entire week of cards to another week."""
+    from datetime import timedelta
+    today = get_today()
+    if request.target_week_start < today:
+        raise HTTPException(400, "Cannot clone to a past week")
+
+    db = await get_db()
+    try:
+        cloned = []
+        for day_offset in range(7):
+            source_date = request.source_week_start + timedelta(days=day_offset)
+            target_date = request.target_week_start + timedelta(days=day_offset)
+            source = await get_schedule_for_date(db, source_date)
+            for board in ["mainboard", "modboard"]:
+                card = source.get(board)
+                if card:
+                    row_id = await upsert_schedule_entry(
+                        db,
+                        schedule_date=target_date,
+                        board_type=board,
+                        workout_title=card["workout_title"],
+                        html_content=card["html_content"],
+                        version=card.get("version"),
+                        workout_date_label=card.get("workout_date_label"),
+                        pushed_by="clone_week",
+                    )
+                    cloned.append({"id": row_id, "date": str(target_date), "board": board})
+
+        if not cloned:
+            raise HTTPException(404, "No cards found in source week to clone")
+        return {"status": "ok", "cloned": len(cloned), "entries": cloned}
+    finally:
+        await db.close()
+
+
+@router.post("/override", dependencies=[Depends(require_api_key)])
 async def emergency_override(request: OverrideRequest):
     """Emergency override — instant card swap."""
     db = await get_db()

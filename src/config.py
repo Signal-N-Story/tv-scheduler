@@ -23,6 +23,9 @@ class Settings(BaseSettings):
     # TV display
     tv_refresh_interval_seconds: int = 60
 
+    # Authentication (set API_KEY env var to enable; empty = auth disabled)
+    api_key: str = ""
+
     # Server
     host: str = "0.0.0.0"
     port: int = 8000
