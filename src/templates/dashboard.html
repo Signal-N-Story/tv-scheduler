@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARIZE TV Scheduler — Dashboard</title>
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+</head>
+<body>
+    <header class="top-bar">
+        <div class="brand">
+            <h1>ARIZE <span class="accent">TV Scheduler</span></h1>
+            <span class="subtitle">180 Fitness Club</span>
+        </div>
+        <div class="tv-status" id="tvStatus">
+            <span class="dot" id="statusDot"></span>
+            <span id="statusText">Checking…</span>
+        </div>
+    </header>
+
+    <main class="dashboard">
+        <!-- Schedule Form -->
+        <section class="card form-card">
+            <h2>Push Schedule</h2>
+            <form id="scheduleForm">
+                <div class="form-row">
+                    <label for="scheduleDate">Schedule Date</label>
+                    <input type="date" id="scheduleDate" required>
+                </div>
+                <div class="form-row">
+                    <label for="boardType">Board</label>
+                    <select id="boardType" required>
+                        <option value="mainboard">Mainboard (TV1 + TV3)</option>
+                        <option value="modboard">Modboard (TV2)</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label for="workoutTitle">Workout Title</label>
+                    <input type="text" id="workoutTitle" placeholder="e.g. CHEST & TRICEPS" required>
+                </div>
+                <div class="form-row">
+                    <label for="workoutDateLabel">Date Label</label>
+                    <input type="text" id="workoutDateLabel" placeholder="e.g. Monday — Feb 24, 2026">
+                </div>
+                <div class="form-row">
+                    <label for="version">Version</label>
+                    <select id="version">
+                        <option value="rx">Rx (Default for Mainboard)</option>
+                        <option value="mod">Mod (Default for Modboard)</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label for="htmlContent">Card HTML</label>
+                    <textarea id="htmlContent" rows="8" placeholder="Paste rendered card HTML here…" required></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Push to Schedule</button>
+                    <button type="reset" class="btn btn-secondary">Clear</button>
+                </div>
+            </form>
+            <div id="formMessage" class="message hidden"></div>
+        </section>
+
+        <!-- Weekly Calendar -->
+        <section class="card calendar-card">
+            <h2>Schedule Overview</h2>
+            <div class="calendar-controls">
+                <button class="btn btn-sm" id="prevWeek">← Prev</button>
+                <span id="weekLabel">This Week</span>
+                <button class="btn btn-sm" id="nextWeek">Next →</button>
+            </div>
+            <div class="calendar-grid" id="calendarGrid">
+                <!-- Filled by JS -->
+            </div>
+        </section>
+
+        <!-- Override Panel -->
+        <section class="card override-card">
+            <h2>Emergency Override</h2>
+            <p class="muted">Immediately replace the active card on a board. The current card will be archived.</p>
+            <form id="overrideForm">
+                <div class="form-row">
+                    <label for="overrideBoard">Board</label>
+                    <select id="overrideBoard" required>
+                        <option value="mainboard">Mainboard</option>
+                        <option value="modboard">Modboard</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label for="overrideHtml">Replacement Card HTML</label>
+                    <textarea id="overrideHtml" rows="5" placeholder="Paste override HTML…" required></textarea>
+                </div>
+                <div class="form-row">
+                    <label for="overrideReason">Reason</label>
+                    <input type="text" id="overrideReason" placeholder="e.g. Wrong card displayed">
+                </div>
+                <button type="submit" class="btn btn-danger">Apply Override</button>
+            </form>
+            <div id="overrideMessage" class="message hidden"></div>
+        </section>
+
+        <!-- Audit Log -->
+        <section class="card audit-card">
+            <h2>Audit Log</h2>
+            <div class="audit-controls">
+                <select id="auditFilter">
+                    <option value="">All Actions</option>
+                    <option value="schedule_push">Schedule Push</option>
+                    <option value="schedule_edit">Schedule Edit</option>
+                    <option value="schedule_delete">Schedule Delete</option>
+                    <option value="override">Override</option>
+                    <option value="midnight_swap">Midnight Swap</option>
+                    <option value="fallback_triggered">Fallback Triggered</option>
+                </select>
+                <button class="btn btn-sm" id="refreshAudit">Refresh</button>
+            </div>
+            <div class="audit-list" id="auditList">
+                <!-- Filled by JS -->
+            </div>
+        </section>
+    </main>
+
+    <footer class="bottom-bar">
+        <span>ARIZE TV Scheduler v1.0.0</span>
+        <span>Next swap: <strong id="nextSwap">—</strong></span>
+    </footer>
+
+    <script src="/static/js/dashboard.js"></script>
+</body>
+</html>

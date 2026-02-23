@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, height=1080, initial-scale=1.0">
+    <meta http-equiv="refresh" content="60">
+    <title>ARIZE — 180 Fitness Club</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            width: 1920px;
+            height: 1080px;
+            overflow: hidden;
+            background: #0a0a0a;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+        }
+        .splash {
+            text-align: center;
+            animation: fadeIn 1.5s ease-out;
+        }
+        .logo-text {
+            font-size: 120px;
+            font-weight: 900;
+            letter-spacing: 12px;
+            background: linear-gradient(135deg, #ff6b35, #f7c948, #ff6b35);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+        }
+        .tagline {
+            font-size: 36px;
+            font-weight: 300;
+            color: #888;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+        }
+        .divider {
+            width: 200px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #ff6b35, transparent);
+            margin: 40px auto;
+        }
+        .status {
+            font-size: 18px;
+            color: #555;
+            margin-top: 60px;
+        }
+        .pulse {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #ff6b35;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+    </style>
+</head>
+<body>
+    <div class="splash">
+        <div class="logo-text">ARIZE</div>
+        <div class="divider"></div>
+        <div class="tagline">180 Fitness Club</div>
+        <div class="status">
+            <span class="pulse"></span>
+            Waiting for today's workout card…
+        </div>
+    </div>
+    <script>
+        // Auto-refresh fallback
+        setTimeout(() => { window.location.reload(); }, 60000);
+    </script>
+</body>
+</html>
