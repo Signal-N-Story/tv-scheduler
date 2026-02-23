@@ -161,6 +161,86 @@ $('#previewModal').addEventListener('click', (e) => {
     }
 });
 
+
+// ── Canva Import ────────────────────────────────────────────────
+function parseCanvaUrl(url) {
+    if (!url) return null;
+    // Match patterns like:
+    //   https://www.canva.com/design/DAGxxxxx/view
+    //   https://www.canva.com/design/DAGxxxxx/edit
+    //   https://www.canva.com/design/DAGxxxxx/something?utm=...
+    //   https://canva.com/design/DAGxxxxx/view
+    const match = url.match(/https?:\/\/(?:www\.)?canva\.com\/design\/([A-Za-z0-9_-]+)/);
+    return match ? match[1] : null;
+}
+
+function showCanvaError(text) {
+    const el = $('#canvaError');
+    el.textContent = text;
+    el.classList.remove('hidden');
+    setTimeout(() => el.classList.add('hidden'), 6000);
+}
+
+function hideCanvaError() {
+    $('#canvaError').classList.add('hidden');
+}
+
+$('#canvaPreviewBtn').addEventListener('click', () => {
+    const url = $('#canvaUrl').value.trim();
+    hideCanvaError();
+
+    if (!url) {
+        showCanvaError('Please paste a Canva design URL.');
+        return;
+    }
+
+    const designId = parseCanvaUrl(url);
+    if (!designId) {
+        showCanvaError('Invalid Canva URL. Expected format: https://www.canva.com/design/DAG.../view');
+        return;
+    }
+
+    const embedUrl = `https://www.canva.com/design/${designId}/view?embed`;
+    const frame = $('#canvaPreviewFrame');
+    frame.src = embedUrl;
+    $('#canvaPreviewArea').classList.remove('hidden');
+});
+
+$('#canvaImportBtn').addEventListener('click', () => {
+    const url = $('#canvaUrl').value.trim();
+    const designId = parseCanvaUrl(url);
+
+    if (!designId) {
+        showCanvaError('No valid Canva design loaded. Preview a design first.');
+        return;
+    }
+
+    const embedUrl = `https://www.canva.com/design/${designId}/view?embed`;
+
+    const cardHtml = `<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<style>*{margin:0;padding:0}body{width:1920px;height:1080px;overflow:hidden;background:#000}iframe{width:1920px;height:1080px;border:none}</style>
+</head><body>
+<iframe src="${embedUrl}" width="1920" height="1080" frameborder="0" allowfullscreen></iframe>
+</body></html>`;
+
+    // Populate the form fields
+    $('#htmlContent').value = cardHtml;
+    if (!$('#workoutTitle').value.trim()) {
+        $('#workoutTitle').value = 'Canva Import';
+    }
+
+    // Show a preview in the modal
+    const frame = $('#previewFrame');
+    frame.srcdoc = cardHtml;
+    $('#previewModal').classList.remove('hidden');
+
+    // Scroll to the Card HTML textarea
+    $('#htmlContent').scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    showMsg($('#formMessage'), 'Canva design imported. Review the card and push to schedule.', 'success');
+});
+
 // ── Schedule Form ──────────────────────────────────────────────
 $('#scheduleForm').addEventListener('submit', async (e) => {
     e.preventDefault();
