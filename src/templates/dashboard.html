@@ -24,6 +24,74 @@
     </header>
 
     <main class="dashboard">
+        <!-- Live TV Control Board -->
+        <section class="card control-board" id="controlBoard">
+            <div class="control-header">
+                <div class="control-title">
+                    <span class="live-indicator"></span>
+                    <h2>LIVE TV MONITOR</h2>
+                </div>
+                <div class="control-meta">
+                    <span class="muted" id="monitorRefresh">Auto-refresh: 60s</span>
+                    <button class="btn btn-sm" id="refreshMonitor">Refresh Now</button>
+                </div>
+            </div>
+
+            <div class="tv-monitors">
+                <div class="tv-monitor" data-tv="1" data-board="mainboard">
+                    <div class="tv-label">
+                        <span class="tv-name">TV1 — MAINBOARD</span>
+                        <span class="tv-location">Front of Gym</span>
+                    </div>
+                    <div class="tv-screen" id="tv1Screen">
+                        <iframe src="/tv/mainboard" id="tv1Frame" sandbox="allow-same-origin"></iframe>
+                    </div>
+                    <div class="tv-info">
+                        <span class="tv-status-dot" id="tv1Dot"></span>
+                        <span class="tv-card-title" id="tv1Title">Loading...</span>
+                        <span class="tv-card-meta" id="tv1Meta"></span>
+                    </div>
+                </div>
+
+                <div class="tv-monitor" data-tv="2" data-board="modboard">
+                    <div class="tv-label">
+                        <span class="tv-name">TV2 — MODBOARD</span>
+                        <span class="tv-location">Front of Gym</span>
+                    </div>
+                    <div class="tv-screen" id="tv2Screen">
+                        <iframe src="/tv/modboard" id="tv2Frame" sandbox="allow-same-origin"></iframe>
+                    </div>
+                    <div class="tv-info">
+                        <span class="tv-status-dot" id="tv2Dot"></span>
+                        <span class="tv-card-title" id="tv2Title">Loading...</span>
+                        <span class="tv-card-meta" id="tv2Meta"></span>
+                    </div>
+                </div>
+
+                <div class="tv-monitor mirror" data-tv="3" data-board="mainboard">
+                    <div class="tv-label">
+                        <span class="tv-name">TV3 — MAINBOARD</span>
+                        <span class="tv-location">Back of Gym</span>
+                        <span class="mirror-badge">Mirrors TV1</span>
+                    </div>
+                    <div class="tv-screen" id="tv3Screen">
+                        <iframe src="/tv/mainboard" id="tv3Frame" sandbox="allow-same-origin"></iframe>
+                    </div>
+                    <div class="tv-info">
+                        <span class="tv-status-dot" id="tv3Dot"></span>
+                        <span class="tv-card-title" id="tv3Title">Loading...</span>
+                        <span class="tv-card-meta" id="tv3Meta"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="swap-countdown">
+                <span>Next card swap in: </span>
+                <strong id="swapTimer">--</strong>
+                <span class="muted"> (midnight CST)</span>
+            </div>
+        </section>
+
         <!-- Schedule Form -->
         <section class="card form-card">
             <h2>Push Schedule</h2>
