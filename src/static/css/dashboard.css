@@ -145,7 +145,7 @@ body {
 .message { padding: 10px 14px; border-radius: 6px; margin-top: 12px; font-size: 13px; }
 .message.success { background: rgba(34,197,94,0.15); color: var(--success); }
 .message.error { background: rgba(239,68,68,0.15); color: var(--danger); }
-.hidden { display: none; }
+.hidden { display: none !important; }
 
 /* Calendar */
 .calendar-controls {
