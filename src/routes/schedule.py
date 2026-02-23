@@ -71,15 +71,36 @@ async def get_schedule(
 
 @router.get("/status")
 async def get_live_status():
-    """Current live status — what's on each TV right now."""
+    """Current live status — what's on each TV right now.
+
+    Includes fallback_layer per board, next_swap_at, and server_time.
+    """
+    from src.services.fallback import resolve_card_html
+    from src.config import settings
+    from datetime import datetime
+
     db = await get_db()
     try:
         today = get_today()
         schedule = await get_schedule_for_date(db, today)
-        from datetime import datetime
+
+        # Resolve fallback layer for each board
+        _, mainboard_layer = await resolve_card_html(db, today, settings.BOARD_MAINBOARD)
+        _, modboard_layer = await resolve_card_html(db, today, settings.BOARD_MODBOARD)
+
+        mainboard_data = schedule.get("mainboard")
+        modboard_data = schedule.get("modboard")
+
+        def enrich(card_data, layer):
+            if card_data:
+                card_data["fallback_layer"] = layer
+            else:
+                card_data = {"fallback_layer": layer, "status": "fallback"}
+            return card_data
+
         return {
-            "mainboard": schedule.get("mainboard"),
-            "modboard": schedule.get("modboard"),
+            "mainboard": enrich(mainboard_data, mainboard_layer),
+            "modboard": enrich(modboard_data, modboard_layer),
             "next_swap_at": get_next_swap_time().isoformat(),
             "server_time": datetime.now().isoformat(),
         }

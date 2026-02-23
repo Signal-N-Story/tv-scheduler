@@ -366,17 +366,107 @@ async function loadAuditLog() {
 $('#auditFilter').addEventListener('change', loadAuditLog);
 $('#refreshAudit').addEventListener('click', loadAuditLog);
 
-// ── Next Swap Time ─────────────────────────────────────────────
-async function updateNextSwap() {
+// ── Live TV Monitor ─────────────────────────────────────────────
+const MONITOR_REFRESH_MS = 60000;
+
+async function refreshTVMonitor() {
+    // Reload all TV iframes
+    ['tv1Frame', 'tv2Frame', 'tv3Frame'].forEach(id => {
+        const frame = document.getElementById(id);
+        if (frame) frame.src = frame.src;
+    });
+
+    // Fetch status data
     try {
         const res = await fetch(`${API}/status`);
         const data = await res.json();
+
+        updateTVInfo('tv1', data.mainboard, 'mainboard');
+        updateTVInfo('tv2', data.modboard, 'modboard');
+        updateTVInfo('tv3', data.mainboard, 'mainboard');
+
+        // Update swap countdown
         if (data.next_swap_at) {
+            updateSwapCountdown(data.next_swap_at);
             $('#nextSwap').textContent = new Date(data.next_swap_at).toLocaleString();
         }
     } catch {
+        ['tv1', 'tv2', 'tv3'].forEach(tv => {
+            document.getElementById(`${tv}Dot`).className = 'tv-status-dot offline';
+            document.getElementById(`${tv}Title`).textContent = 'Connection Error';
+            document.getElementById(`${tv}Meta`).textContent = '';
+        });
         $('#nextSwap').textContent = '—';
     }
+}
+
+function updateTVInfo(tvId, cardData, boardType) {
+    const dot = document.getElementById(`${tvId}Dot`);
+    const title = document.getElementById(`${tvId}Title`);
+    const meta = document.getElementById(`${tvId}Meta`);
+
+    if (!dot || !title || !meta) return;
+
+    if (cardData && cardData.status !== 'fallback') {
+        const layer = cardData.fallback_layer || 1;
+        if (layer === 1) {
+            dot.className = 'tv-status-dot live';
+        } else {
+            dot.className = 'tv-status-dot fallback';
+        }
+        title.textContent = cardData.workout_title || 'Untitled Card';
+        const status = cardData.status === 'overridden' ? 'overridden' : 'live';
+        meta.textContent = `${cardData.version || '—'} · ${status}`;
+    } else {
+        dot.className = 'tv-status-dot fallback';
+        title.textContent = 'No Card — Fallback Active';
+        meta.textContent = 'splash screen';
+    }
+}
+
+function updateSwapCountdown(nextSwapAt) {
+    const next = new Date(nextSwapAt);
+    const now = new Date();
+    const diff = next - now;
+    const timer = document.getElementById('swapTimer');
+    if (!timer) return;
+    if (diff > 0) {
+        const hours = Math.floor(diff / 3600000);
+        const mins = Math.floor((diff % 3600000) / 60000);
+        timer.textContent = `${hours}h ${mins}m`;
+    } else {
+        timer.textContent = 'Now';
+    }
+}
+
+// Dynamic iframe scaling via ResizeObserver
+const tvScreens = document.querySelectorAll('.tv-screen');
+const resizeObserver = new ResizeObserver(entries => {
+    entries.forEach(entry => {
+        const width = entry.contentRect.width;
+        const scale = width / 1920;
+        const iframe = entry.target.querySelector('iframe');
+        if (iframe) {
+            iframe.style.transform = `scale(${scale})`;
+        }
+    });
+});
+tvScreens.forEach(screen => resizeObserver.observe(screen));
+
+// Click TV screen → full-size preview
+document.querySelectorAll('.tv-screen').forEach(screen => {
+    screen.addEventListener('click', () => {
+        const iframe = screen.querySelector('iframe');
+        if (iframe) {
+            $('#previewFrame').src = iframe.src;
+            $('#previewModal').classList.remove('hidden');
+        }
+    });
+});
+
+// Manual refresh button
+if (document.getElementById('refreshMonitor')) {
+    document.getElementById('refreshMonitor').addEventListener('click', refreshTVMonitor);
 }
 
 // ── Init ───────────────────────────────────────────────────────
@@ -388,8 +478,10 @@ document.addEventListener('DOMContentLoaded', () => {
     loadTemplates();
     loadCalendar();
     loadAuditLog();
-    updateNextSwap();
+    refreshTVMonitor();
 
     // Refresh status every 30s
     setInterval(checkTVStatus, 30000);
+    // Refresh TV monitors every 60s
+    setInterval(refreshTVMonitor, MONITOR_REFRESH_MS);
 });

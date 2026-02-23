@@ -67,6 +67,7 @@ body {
     max-width: 1400px;
     margin: 0 auto;
 }
+.control-board { grid-column: 1 / -1; border: 2px solid var(--accent); }
 .calendar-card { grid-column: 1 / -1; }
 .audit-card { grid-column: 1 / -1; }
 
@@ -222,6 +223,138 @@ body {
 .modal-body iframe {
     width: 100%; height: 600px; border: 1px solid var(--border);
     border-radius: 6px; background: #fff;
+}
+
+/* Live TV Control Board */
+.control-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+.control-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.control-title h2 {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0;
+}
+.control-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.live-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--danger);
+    animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+.tv-monitors {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+.tv-monitor {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+}
+.tv-label {
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--border);
+}
+.tv-name {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+.tv-location {
+    font-size: 11px;
+    color: var(--text-muted);
+}
+.mirror-badge {
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(245, 158, 11, 0.2);
+    color: var(--warning);
+    margin-left: auto;
+}
+.tv-screen {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: #000;
+    cursor: pointer;
+}
+.tv-screen iframe {
+    width: 1920px;
+    height: 1080px;
+    border: none;
+    transform-origin: top left;
+    pointer-events: none;
+}
+.tv-info {
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+}
+.tv-status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--text-muted);
+    flex-shrink: 0;
+}
+.tv-status-dot.live { background: var(--success); }
+.tv-status-dot.fallback { background: var(--warning); }
+.tv-status-dot.offline { background: var(--danger); }
+.tv-card-title {
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.tv-card-meta {
+    color: var(--text-muted);
+    margin-left: auto;
+    white-space: nowrap;
+}
+.swap-countdown {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    font-size: 13px;
+    text-align: center;
+}
+.swap-countdown strong {
+    color: var(--accent);
+    font-size: 16px;
+}
+
+@media (max-width: 900px) {
+    .tv-monitors { grid-template-columns: 1fr; }
 }
 
 /* Bottom Bar */
