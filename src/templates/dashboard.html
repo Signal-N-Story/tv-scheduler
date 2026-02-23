@@ -129,6 +129,21 @@
                         <option value="mod">Mod (Default for Modboard)</option>
                     </select>
                 </div>
+                <!-- Canva Import -->
+                <div class="canva-import-section">
+                    <h3 class="section-label">Import from Canva</h3>
+                    <p class="canva-tip">Paste a Canva share link to import a design as a card. For best results, design at <strong>1920 &times; 1080 px</strong> (landscape/TV resolution).</p>
+                    <div class="canva-input-row">
+                        <input type="url" id="canvaUrl" placeholder="https://www.canva.com/design/DAG.../view" autocomplete="off">
+                        <button type="button" class="btn btn-secondary" id="canvaPreviewBtn">Preview</button>
+                    </div>
+                    <div id="canvaError" class="message error hidden"></div>
+                    <div id="canvaPreviewArea" class="canva-preview-area hidden">
+                        <iframe id="canvaPreviewFrame" title="Canva Design Preview"></iframe>
+                        <button type="button" class="btn btn-primary" id="canvaImportBtn">Import as Card</button>
+                    </div>
+                </div>
+
                 <div class="form-row">
                     <label for="htmlContent">Card HTML</label>
                     <textarea id="htmlContent" rows="8" placeholder="Paste rendered card HTML here…" required></textarea>
