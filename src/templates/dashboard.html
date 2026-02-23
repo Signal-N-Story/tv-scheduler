@@ -159,14 +159,14 @@
                 <!-- Canva Import -->
                 <div class="canva-import-section">
                     <h3 class="section-label">Import from Canva</h3>
-                    <p class="canva-tip">Paste a Canva share link to import a design as a card. For best results, design at <strong>1920 &times; 1080 px</strong> (landscape/TV resolution).</p>
+                    <p class="canva-tip">Paste a Canva share link to import a design as a live card. When you update the design in Canva, the TVs update automatically. Design at <strong>1920 &times; 1080 px</strong> for best results.</p>
                     <div class="canva-input-row">
                         <input type="url" id="canvaUrl" placeholder="https://www.canva.com/design/DAG.../view" autocomplete="off">
                         <button type="button" class="btn btn-secondary" id="canvaPreviewBtn">Preview</button>
                     </div>
                     <div id="canvaError" class="message error hidden"></div>
                     <div id="canvaPreviewArea" class="canva-preview-area hidden">
-                        <iframe id="canvaPreviewFrame" title="Canva Design Preview"></iframe>
+                        <iframe id="canvaPreviewFrame" title="Canva Design Preview" allow="fullscreen"></iframe>
                         <button type="button" class="btn btn-primary" id="canvaImportBtn">Import as Card</button>
                     </div>
                 </div>
@@ -300,7 +300,7 @@
                 <button class="btn btn-sm" id="closePreview">&times;</button>
             </div>
             <div class="modal-body">
-                <iframe id="previewFrame" sandbox="allow-same-origin"></iframe>
+                <iframe id="previewFrame" sandbox="allow-same-origin allow-scripts"></iframe>
             </div>
         </div>
     </div>

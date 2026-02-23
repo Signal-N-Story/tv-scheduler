@@ -147,7 +147,15 @@ $('#previewBtn').addEventListener('click', () => {
     const html = $('#htmlContent').value;
     if (!html.trim()) return;
     const frame = $('#previewFrame');
-    frame.srcdoc = html;
+    // Detect Canva iframe cards — use direct src to avoid X-Frame-Options blocking
+    const canvaMatch = html.match(/src="(https:\/\/www\.canva\.com\/design\/[^"]+)"/);
+    if (canvaMatch) {
+        frame.removeAttribute('srcdoc');
+        frame.src = canvaMatch[1];
+    } else {
+        frame.removeAttribute('src');
+        frame.srcdoc = html;
+    }
     $('#previewModal').classList.remove('hidden');
 });
 
@@ -289,11 +297,7 @@ $('#uploadZone').addEventListener('drop', (e) => {
 $('#scheduleForm').addEventListener('reset', () => { setTimeout(clearUpload, 0); });
 
 // ── Canva Import ────────────────────────────────────────────────
-function parseCanvaUrl(url) {
-    if (!url) return null;
-    const match = url.match(/https?:\/\/(?:www\.)?canva\.com\/design\/([A-Za-z0-9_-]+)/);
-    return match ? match[1] : null;
-}
+let canvaEmbedUrl = null;
 
 function showCanvaError(text) {
     const el = $('#canvaError');
@@ -306,12 +310,33 @@ function hideCanvaError() {
     $('#canvaError').classList.add('hidden');
 }
 
+function parseCanvaUrl(url) {
+    if (!url) return null;
+    const match = url.match(/https?:\/\/(?:www\.)?canva\.com\/design\/([A-Za-z0-9_-]+)/);
+    return match ? match[1] : null;
+}
+
+function buildCanvaCardHtml(embedUrl) {
+    return `<!DOCTYPE html>
+<html><head>
+<meta charset="UTF-8">
+<style>
+  * { margin:0; padding:0; }
+  body { width:1920px; height:1080px; overflow:hidden; background:#000; }
+  iframe { width:1920px; height:1080px; border:none; }
+</style>
+</head><body>
+<iframe src="${embedUrl}" width="1920" height="1080" frameborder="0" allowfullscreen></iframe>
+</body></html>`;
+}
+
 $('#canvaPreviewBtn').addEventListener('click', () => {
     const url = $('#canvaUrl').value.trim();
     hideCanvaError();
+    canvaEmbedUrl = null;
 
     if (!url) {
-        showCanvaError('Please paste a Canva design URL.');
+        showCanvaError('Please paste a Canva share link.');
         return;
     }
 
@@ -322,41 +347,34 @@ $('#canvaPreviewBtn').addEventListener('click', () => {
     }
 
     const embedUrl = `https://www.canva.com/design/${designId}/view?embed`;
-    const frame = $('#canvaPreviewFrame');
-    frame.src = embedUrl;
+    canvaEmbedUrl = embedUrl;
+
+    // Load preview directly via iframe src (not srcdoc) to avoid null-origin issues
+    $('#canvaPreviewFrame').src = embedUrl;
     $('#canvaPreviewArea').classList.remove('hidden');
 });
 
 $('#canvaImportBtn').addEventListener('click', () => {
-    const url = $('#canvaUrl').value.trim();
-    const designId = parseCanvaUrl(url);
-
-    if (!designId) {
-        showCanvaError('No valid Canva design loaded. Preview a design first.');
+    if (!canvaEmbedUrl) {
+        showCanvaError('No design loaded. Preview a Canva link first.');
         return;
     }
 
-    const embedUrl = `https://www.canva.com/design/${designId}/view?embed`;
-
-    const cardHtml = `<!DOCTYPE html>
-<html><head><meta charset="UTF-8">
-<style>*{margin:0;padding:0}body{width:1920px;height:1080px;overflow:hidden;background:#000}iframe{width:1920px;height:1080px;border:none}</style>
-</head><body>
-<iframe src="${embedUrl}" width="1920" height="1080" frameborder="0" allowfullscreen></iframe>
-</body></html>`;
+    const cardHtml = buildCanvaCardHtml(canvaEmbedUrl);
 
     $('#htmlContent').value = cardHtml;
     if (!$('#workoutTitle').value.trim()) {
         $('#workoutTitle').value = 'Canva Import';
     }
 
-    const frame = $('#previewFrame');
-    frame.srcdoc = cardHtml;
+    // Preview via direct iframe src instead of srcdoc to avoid nested iframe blocking
+    $('#previewFrame').removeAttribute('srcdoc');
+    $('#previewFrame').src = canvaEmbedUrl;
     $('#previewModal').classList.remove('hidden');
 
     $('#htmlContent').scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-    showMsg($('#formMessage'), 'Canva design imported. Review the card and push to schedule.', 'success');
+    showMsg($('#formMessage'), 'Canva design imported as live card. Review and push to schedule.', 'success');
 });
 
 // ── Schedule Form ──────────────────────────────────────────────

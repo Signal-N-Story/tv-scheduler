@@ -3,6 +3,7 @@
 from datetime import date
 from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi.responses import Response
 
 from src.models.database import get_db
 from src.models.schemas import (
@@ -250,6 +251,28 @@ async def clone_week(request: CloneWeekRequest):
         return {"status": "ok", "cloned": len(cloned), "entries": cloned}
     finally:
         await db.close()
+
+
+@router.get("/fetch-image")
+async def fetch_image(url: str = Query(...)):
+    """Proxy endpoint to fetch a public image URL (bypasses CORS)."""
+    import httpx
+
+    if not url.startswith(("http://", "https://")):
+        raise HTTPException(400, "Invalid URL")
+
+    try:
+        async with httpx.AsyncClient(follow_redirects=True, timeout=15.0) as client:
+            resp = await client.get(url)
+            resp.raise_for_status()
+
+            content_type = resp.headers.get("content-type", "")
+            if not content_type.startswith("image/"):
+                raise HTTPException(400, f"URL did not return an image (got {content_type})")
+
+            return Response(content=resp.content, media_type=content_type)
+    except httpx.HTTPError as e:
+        raise HTTPException(502, f"Failed to fetch image: {str(e)}")
 
 
 @router.post("/override", dependencies=[Depends(require_api_key)])
