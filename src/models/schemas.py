@@ -81,6 +81,42 @@ class TVHealthCheck(BaseModel):
     modboard_scheduled: bool
 
 
+# ── Template Models ──────────────────────────────────────────────
+
+class TemplateCreateRequest(BaseModel):
+    """Request to create a reusable card template."""
+    name: str
+    board_type: str = Field(..., pattern="^(mainboard|modboard)$")
+    version: Optional[str] = Field(None, pattern="^(rx|scaled|mod)$")
+    html_content: str
+
+
+class TemplateResponse(BaseModel):
+    """A card template returned from the API."""
+    id: int
+    name: str
+    board_type: str
+    version: Optional[str]
+    html_content: str
+    created_at: datetime
+    updated_at: datetime
+
+
+# ── Clone Models ─────────────────────────────────────────────────
+
+class CloneDayRequest(BaseModel):
+    """Clone cards from one date to another."""
+    source_date: date
+    target_date: date
+    board_type: Optional[str] = Field(None, pattern="^(mainboard|modboard)$")
+
+
+class CloneWeekRequest(BaseModel):
+    """Clone an entire week of cards to another week."""
+    source_week_start: date
+    target_week_start: date
+
+
 # ── Audit Models ─────────────────────────────────────────────────
 
 class AuditLogEntry(BaseModel):

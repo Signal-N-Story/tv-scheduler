@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { width: 1920px; height: 1080px; background: #fff; font-family: 'Arial Black', Arial, sans-serif; color: #000; display: flex; flex-direction: column; padding: 40px 60px; }
+  .title { text-align: center; font-size: 72px; font-weight: 900; letter-spacing: 2px; margin-bottom: 10px; }
+  .divider { width: 60%; height: 6px; background: #000; margin: 0 auto 20px; }
+  .divider-full { width: 100%; height: 6px; background: #000; margin: 20px 0; }
+  .station { display: flex; align-items: flex-start; margin-bottom: 8px; }
+  .station-num { width: 56px; height: 56px; background: #000; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 900; flex-shrink: 0; margin-right: 16px; }
+  .station-label { font-size: 24px; font-weight: 900; color: #000; margin-left: 8px; }
+  .top-section { text-align: center; margin-bottom: 20px; }
+  .top-section .exercise { font-size: 36px; font-weight: 900; }
+  .middle-row { display: flex; gap: 40px; justify-content: center; flex: 1; }
+  .col { flex: 1; }
+  .col-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .exercise-line { font-size: 26px; font-weight: 700; margin-bottom: 8px; line-height: 1.4; }
+  .exercise-small { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+  .center-line { width: 6px; background: #000; align-self: stretch; }
+  .bottom-section { text-align: center; }
+  .bottom-section .exercise { font-size: 32px; font-weight: 900; }
+  .bottom-row { display: flex; gap: 40px; justify-content: center; margin-top: 20px; }
+  .ladder { text-align: center; font-size: 26px; font-weight: 700; line-height: 1.6; }
+</style>
+</head>
+<body>
+  <div class="title">LEGS &amp; LOADED</div>
+
+  <!-- Station 1 -->
+  <div class="top-section">
+    <div style="display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:8px;">
+      <div class="station-num">1</div>
+      <span class="station-label">BAR</span>
+    </div>
+    <div class="divider"></div>
+    <div class="exercise">1.WALL SIT  2. LATERAL STEP UPS 10R/10L %</div>
+  </div>
+
+  <!-- Middle: Stations 3 and 2 -->
+  <div class="middle-row">
+    <div class="col">
+      <div class="col-header">
+        <div class="station-num">3</div>
+        <span class="station-label">GREY</span>
+      </div>
+      <div class="exercise-line">1.BIKE</div>
+      <div class="exercise-small">2.HEAVY DB LUNGE ---&gt;</div>
+      <div class="exercise-small">20 THRUSTERS</div>
+      <div class="exercise-small">&lt;----DB LUNGE BACK</div>
+    </div>
+    <div class="center-line"></div>
+    <div class="col">
+      <div class="col-header">
+        <div class="station-num">2</div>
+        <span class="station-label">GREY</span>
+      </div>
+      <div class="exercise-line">1.OBLIQUE BENDS 10R/10L</div>
+      <div class="exercise-small">2. PLATE RDL &rarr; FRONT SQUAT</div>
+      <div class="exercise-small">:60 SEC %  :45 SEC %  :30 SEC,  :15 SEC %</div>
+    </div>
+  </div>
+
+  <div class="divider-full"></div>
+  <div class="divider-full" style="margin-top:-14px;"></div>
+
+  <!-- Station 4 -->
+  <div style="display:flex;align-items:flex-start;gap:20px;margin-bottom:16px;">
+    <div>
+      <div class="station-num">4</div>
+      <div class="station-label" style="font-size:16px;">GREEN/ BLACK BOXES</div>
+    </div>
+    <div style="flex:1;text-align:center;">
+      <div class="exercise" style="font-size:36px;">SUPINE HAMSTRING CURLS - BOX JUMPS</div>
+      <div class="ladder">
+        20 --------------20 %<br>
+        15--------------15%<br>
+        10 -------------10%<br>
+        5--------------5%
+      </div>
+    </div>
+  </div>
+
+  <div class="divider-full"></div>
+
+  <!-- Station 5 -->
+  <div style="display:flex;align-items:center;gap:20px;">
+    <div>
+      <div class="station-num">5</div>
+      <div class="station-label" style="font-size:16px;">BLACK</div>
+    </div>
+    <div class="exercise" style="font-size:40px;">BARBELL BACK SQUAT 5-20-5</div>
+  </div>
+</body>
+</html>
